@@ -104,6 +104,13 @@ window.onclick =  function () {
     }
 }
 
+function AudioAutoPlay()
+{
+    if(audio.paused){
+        audio.play();
+    }
+}
+
 function FbxAnim()
 {
     //console.log("AAAA");
@@ -121,7 +128,10 @@ function FullyLoad()
 {
     console.log("Hide Mask!");
     Loading('加载完毕点击屏幕');
+    IsAnim = true;
     IsLoad = true;
+    mask.style.display = 'none';
+    AudioAutoPlay();
 }
 
 function Loading (Time)
