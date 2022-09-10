@@ -4,7 +4,7 @@ import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
 import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
-console.log("0.31"); 
+console.log("0.32"); 
 
 // ■ html div
 const container = document.getElementById("container");
