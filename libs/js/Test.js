@@ -93,21 +93,23 @@ function animate() {
 animate();
 
 // ■ BGM settings
-var audio = new Audio('libs/res/Sound/BGM/01.mp3');
-window.onclick =  function () {
+//var audio = new Audio('libs/res/Sound/BGM/01.mp3');
+// window.onclick =  function () {
     
-    if(IsLoad){
-        console.log("Play BGM");
-        audio.play();
-        IsAnim = true;
-        mask.style.display = 'none';
-    }
-}
+//     if(IsLoad){
+//         console.log("Play BGM");
+//         audio.play();
+//         IsAnim = true;
+//         mask.style.display = 'none';
+//     }
+// }
 
 function AudioAutoPlay()
 {
-    if(audio.paused){
-        audio.play();
+    var music = document.getElementById("music"); 
+    if(music.paused){
+        console.log("Play BGM");
+        music.play();
     }
 }
 
