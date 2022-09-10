@@ -133,7 +133,7 @@ function FullyLoad()
     IsAnim = true;
     IsLoad = true;
     mask.style.display = 'none';
-    AudioAutoPlay();
+    //AudioAutoPlay();
 }
 
 function Loading (Time)
