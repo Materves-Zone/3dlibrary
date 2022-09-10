@@ -8,7 +8,6 @@ console.log("0.34");
 
 // ■ html div
 const container = document.getElementById("container");
-const mask = document.getElementById("mask");
 Loading('加载中...' + '10%');
 
 const scene = new THREE.Scene();
@@ -133,6 +132,7 @@ function FbxAnim()
     }   
 }
 
+const mask = document.getElementById("mask");
 var IsLoad = false;
 function FullyLoad()
 {
