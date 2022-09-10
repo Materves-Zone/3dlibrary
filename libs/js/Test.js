@@ -104,6 +104,14 @@ animate();
 //     }
 // }
 
+window.onclick =  function () {
+    alert("Click Is OK");
+}
+
+window.Touch = function (){
+    alert("Touch Is OK");   
+}
+
 function AudioAutoPlay()
 {
     var music = document.getElementById("music"); 
@@ -132,8 +140,11 @@ function FullyLoad()
     Loading('加载完毕点击屏幕：版本0.1');
     IsAnim = true;
     IsLoad = true;
-    mask.style.display = 'none';
+    //mask.style.display = 'none';
+    mask.style.visibility = 'hidden'; 
     //AudioAutoPlay();
+    mask.innerHTML = "";
+
 }
 
 function Loading (Time)
