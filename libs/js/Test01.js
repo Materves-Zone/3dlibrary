@@ -2,9 +2,9 @@ console.log("0.14");
 
 function myBrowser () {
     
-    // var Broswer = window.navigator.userAgent;
-    // alert(Broswer);
-    // console.log(Broswer);
+    var Broswer = window.navigator.userAgent;
+    alert(Broswer.match("iPhone"));
+    console.log(Broswer);
     // var BrowserVerName = window.navigator.userAgent.split('/');
     // console.log(BrowserVerName[BrowserVerName.length-2]);
     // console.log(BrowserVerName[1]);
@@ -16,15 +16,4 @@ function myBrowser () {
 
 }
 
-// var IsIphone;
-
-// owser();
-
-// window.onclick = function () {
-
-//     IsIphone = false;
-// }
-
-window.ontouchend = function (){
-    alert("Hello World!");
-}
+myBrowser();
