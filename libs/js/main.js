@@ -4,71 +4,94 @@ import { OrbitControls } from '../jsm/controls/OrbitControls.js';
 import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
 import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
-// let 声明的变量只在 let 命令所在的代码块内有效
-// const 声明一个只读的常量，一旦声明，常量的值就不能改变
+console.log("0.1");
+loadingOn("加载中...20%");
 
-console.log("v 0.1");
+const texmanager = new THREE.LoadingManager();
+texmanager.onLoad = function ( ) {
 
-let stats;
+	console.log( 'Loading complete!');
+    loadingOn("<< 请单指点击 >>");
+    isInteract = true;
+};
+
+const objmanager = new THREE.LoadingManager();
+objmanager.onLoad = function () {
+    loadingOn("加载中...80%");
+}
+
+let camera, scene, renderer, stats;
 const clock = new THREE.Clock();
-let mixer;
+let mixer; 
 
-// ■ html div
-const container = document.getElementById("container");
-document.body.appendChild( container );
+//const container = document.createElement( 'div' );
+//document.body.appendChild( container );
 
-// ■ camera settings
-const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-camera.position.set( 0, 100, 800 );
+camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+camera.position.set( 0, 800, 100 );
 
-// ■ render settings
-const renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.shadowMap.enabled = true;
-container.appendChild( renderer.domElement );
-//document.body.appendChild( renderer.domElement );
-
-// ■ scene settings
-const scene = new THREE.Scene();
+scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x000000 );
-scene.fog = new THREE.Fog( 0x000000, 800, 1000 );
+scene.fog = new THREE.Fog( 0x000000, 600, 1000 );
 
-// ■ hemiLight settings
 const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-hemiLight.position.set( 0, 0, 0 );
+hemiLight.position.set( 0, 400, 0 );
 scene.add( hemiLight );
 
-// ■ aolight settings
-const light = new THREE.AmbientLight( 0x404040, 4 ); // soft white light
+const light = new THREE.AmbientLight( 0x404040, 1 ); // soft white light
 scene.add( light );
 
-// ■ dirLight settings
-const dirLight = new THREE.DirectionalLight( 0xffffff );
-dirLight.position.set( 0, 1000, 100 );
-dirLight.castShadow = true;
-dirLight.shadow.camera.top = 180;
-dirLight.shadow.camera.bottom = - 100;
-dirLight.shadow.camera.left = - 120;
-dirLight.shadow.camera.right = 120;
-//scene.add( dirLight );
-
-// ■ grid settings 
-// const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-// grid.material.opacity = 0.2;
+// const grid = new THREE.GridHelper( 1000, 100, 0x000000, 0x000000 );
+// grid.material.opacity = 1;
 // grid.material.transparent = true;
 // scene.add( grid );
 
-// ■ model settings
-const loader = new FBXLoader();
-loader.load( 'libs/res/3D_Obj/Moon.fbx', function ( object ) {
+renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMap.enabled = true;
+container.appendChild( renderer.domElement );
 
-    //mixer = new THREE.AnimationMixer( object );
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.target.set( 0, 0, 0 );
+controls.enablePan = false;
+controls.enableDamping = true;
+controls.minPolarAngle = 1.5;
+controls.maxPolarAngle = 1.5;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
 
-    //const action = mixer.clipAction( object.animations[ 0 ] );
-    //action.play();
-    object.name = 'H';
+// stats
+stats = new Stats();
+container.appendChild( stats.dom );
+
+window.addEventListener( 'resize', onWindowResize );
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+// material
+const objmaterial = new THREE.MeshStandardMaterial();
+const matloader = new THREE.TextureLoader(texmanager).setPath('libs/res/Texture/');
+const diffuseMap = matloader.load('color_Moon.png');
+diffuseMap.encoding = THREE.sRGBEncoding;
+objmaterial.map = diffuseMap;
+
+// model
+const loader = new FBXLoader(objmanager);
+loader.load( 'libs/res/3D_Obj/untitled.fbx', function ( object ) {
+
+    // mixer = new THREE.AnimationMixer( object );
+
+    // const action = mixer.clipAction( object.animations[ 0 ] );
+    // action.play();
+
+    objmaterial.roughness = 0;
 
     object.traverse( function ( child ) {
 
@@ -76,44 +99,20 @@ loader.load( 'libs/res/3D_Obj/Moon.fbx', function ( object ) {
 
             child.castShadow = true;
             child.receiveShadow = true;
-
+            child.material = objmaterial;
         }
 
     } );
-    object.position.set(0,100,-200);
+
+    object.scale.set(1,1,1);
+    object.position.set(0,0,0);
     scene.add( object );
 
 } );
 
-// ■ control settings
-// const controls = new OrbitControls( camera, renderer.domElement );
-// controls.target.set( 0, 100, 0 );
-// controls.enablePan = false;
-// controls.update();
+function animate() {
 
-// ■ stats
-// stats = new Stats();
-// container.appendChild( stats.dom );
-
-// ■ windows settings
-//window.addEventListener( 'resize', onWindowResize );
-
-// ■ windows settings
-//window.addEventListener( 'resize', onWindowResize );
-
-// ■ windows update
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-
-// ■ web update
-function threeupdate() {
-
-    requestAnimationFrame( threeupdate);
+    requestAnimationFrame( animate );
 
     const delta = clock.getDelta();
 
@@ -121,37 +120,37 @@ function threeupdate() {
 
     renderer.render( scene, camera );
 
-    // stats.update();
+    stats.update();
 
-    TESTING();
+    controls.update();
 
 }
 
-threeupdate();
+animate();
 
-// ■ BGM settings
+// exit loading page
+var loadpage = document.getElementById("loading");
+function loadingPageHide()
+{
+    loadpage.style.visibility = 'hidden';
+}
+function loadingOn(str)
+{
+    document.getElementById("loadingText").innerText = str;
+}
+
+// sound
 var audio = new Audio('libs/res/Sound/BGM/01.mp3');
-
-function PlayBGM()
-{
-    console.log("Play BGM");
-    audio.play();
-    IsAnim = true;
-}
-
-window.onclick = PlayBGM;
-
-var IsAnim = false;
-
-function TESTING()
-{
-    //console.log("AAAA");
-    if(IsAnim)
-    {
-        var obj = scene.getObjectByName( "H" );
-        if(obj != null){
-            obj.rotation.y += 0.001;
-        }
+var isInteract = false;
+window.ontouchend = function(){
+    if(isInteract){
+        audio.play();
+        loadingPageHide();
     }
-    
+}
+window.onclick = function(){
+    if(isInteract){
+        audio.play();
+        loadingPageHide();
+    }    
 }
