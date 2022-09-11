@@ -1,4 +1,4 @@
-console.log("0.1");
+console.log("0.11");
 window.ontouchend = function(){
     alert("Hello");
 }
