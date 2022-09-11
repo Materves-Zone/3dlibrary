@@ -21,23 +21,23 @@ const container = document.createElement( 'div' );
 document.body.appendChild( container );
 
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-camera.position.set( 0, 0, 100 );
+camera.position.set( 0, 500, 100 );
 
 scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x000000 );
 scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
 const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-hemiLight.position.set( 0, 200, 0 );
+hemiLight.position.set( 0, 400, 0 );
 scene.add( hemiLight );
 
 const light = new THREE.AmbientLight( 0x404040, 1 ); // soft white light
 scene.add( light );
 
-const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-grid.material.opacity = 1;
-grid.material.transparent = true;
-scene.add( grid );
+// const grid = new THREE.GridHelper( 1000, 100, 0x000000, 0x000000 );
+// grid.material.opacity = 1;
+// grid.material.transparent = true;
+// scene.add( grid );
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -46,7 +46,12 @@ container.appendChild( renderer.domElement );
 
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.target.set( 0, 0, 0 );
-controls.update();
+controls.enablePan = false;
+controls.enableDamping = true;
+controls.minPolarAngle = 1.5;
+controls.maxPolarAngle = 1.5;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
 
 // stats
 stats = new Stats();
@@ -63,8 +68,15 @@ function onWindowResize() {
 
 }
 
+// material
+const objmaterial = new THREE.MeshStandardMaterial();
+const matloader = new THREE.TextureLoader().setPath('libs/res/Texture/');
+const diffuseMap = matloader.load('color_Moon.png');
+diffuseMap.encoding = THREE.sRGBEncoding;
+objmaterial.map = diffuseMap;
+
 // model
-const loader = new FBXLoader();
+const loader = new FBXLoader(manager);
 loader.load( 'libs/res/3D_Obj/untitled.fbx', function ( object ) {
 
     // mixer = new THREE.AnimationMixer( object );
@@ -72,17 +84,20 @@ loader.load( 'libs/res/3D_Obj/untitled.fbx', function ( object ) {
     // const action = mixer.clipAction( object.animations[ 0 ] );
     // action.play();
 
+    objmaterial.roughness = 0;
+
     object.traverse( function ( child ) {
 
         if ( child.isMesh ) {
 
             child.castShadow = true;
             child.receiveShadow = true;
+            child.material = objmaterial;
         }
 
     } );
 
-    object.scale.set(0.1,0.1,0.1);
+    object.scale.set(1,1,1);
     object.position.set(0,0,0);
     scene.add( object );
 
@@ -99,6 +114,8 @@ function animate() {
     renderer.render( scene, camera );
 
     stats.update();
+
+    controls.update();
 
 }
 
