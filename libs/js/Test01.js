@@ -5,20 +5,26 @@ import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
 import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
 console.log("0.1");
+loadingOn("加载中...20%");
 
-const manager = new THREE.LoadingManager();
-manager.onLoad = function ( ) {
+const texmanager = new THREE.LoadingManager();
+texmanager.onLoad = function ( ) {
 
 	console.log( 'Loading complete!');
-
+    loadingPageHide();
 };
+
+const objmanager = new THREE.LoadingManager();
+objmanager.onLoad = function () {
+    loadingOn("加载中...80%");
+}
 
 let camera, scene, renderer, stats;
 const clock = new THREE.Clock();
 let mixer;
 
-const container = document.createElement( 'div' );
-document.body.appendChild( container );
+//const container = document.createElement( 'div' );
+//document.body.appendChild( container );
 
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 camera.position.set( 0, 500, 100 );
@@ -70,13 +76,13 @@ function onWindowResize() {
 
 // material
 const objmaterial = new THREE.MeshStandardMaterial();
-const matloader = new THREE.TextureLoader().setPath('libs/res/Texture/');
+const matloader = new THREE.TextureLoader(texmanager).setPath('libs/res/Texture/');
 const diffuseMap = matloader.load('color_Moon.png');
 diffuseMap.encoding = THREE.sRGBEncoding;
 objmaterial.map = diffuseMap;
 
 // model
-const loader = new FBXLoader(manager);
+const loader = new FBXLoader(objmanager);
 loader.load( 'libs/res/3D_Obj/untitled.fbx', function ( object ) {
 
     // mixer = new THREE.AnimationMixer( object );
@@ -120,3 +126,14 @@ function animate() {
 }
 
 animate();
+
+// exit loading page
+var loadpage = document.getElementById("loading");
+function loadingPageHide()
+{
+    loadpage.style.visibility = 'hidden';
+}
+function loadingOn(str)
+{
+    document.getElementById("loadingText").innerText = str;
+}

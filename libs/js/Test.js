@@ -137,7 +137,6 @@ var IsLoad = false;
 function FullyLoad()
 {
     console.log("Hide Mask!");
-    Loading('加载完毕点击屏幕：版本0.1');
     IsAnim = true;
     IsLoad = true;
     //mask.style.display = 'none';
@@ -149,5 +148,5 @@ function FullyLoad()
 
 function Loading (Time)
 {
-    document.getElementById("time").innerHTML=Time;
+    document.getElementById("loadingText").innerHTML=Time;
 }
