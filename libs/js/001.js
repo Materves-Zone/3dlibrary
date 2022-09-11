@@ -5,7 +5,25 @@ import { FBXLoader } from '../jsm/loaders/FBXLoader.js';
 import { RGBELoader } from '../jsm/loaders/RGBELoader.js';
 
 console.log("0.1");
-loadingOn("加载中...20%");
+
+var IsLoad = false;
+var IsTexture = false;
+
+THREE.Cache.enabled = true;
+const texloader = new THREE.FileLoader();
+texloader.load(
+    '/libs/res/Texture/color_Moon.png',
+
+    function ( data ) {
+		// output the text to the console
+		//console.log( data )
+	},
+
+    function (xhr){
+        var s=parseInt(xhr.loaded / xhr.total * 100) + '%';
+        loadingOn('正在加载中 ...' + s);
+    }
+);
 
 const texmanager = new THREE.LoadingManager();
 texmanager.onLoad = function ( ) {
@@ -61,8 +79,8 @@ controls.autoRotate = true;
 controls.autoRotateSpeed = 0.5;
 
 // stats
-stats = new Stats();
-container.appendChild( stats.dom );
+// stats = new Stats();
+// container.appendChild( stats.dom );
 
 window.addEventListener( 'resize', onWindowResize );
 
@@ -83,7 +101,7 @@ diffuseMap.encoding = THREE.sRGBEncoding;
 objmaterial.map = diffuseMap;
 
 // model
-const loader = new FBXLoader(objmanager);
+const loader = new FBXLoader();
 loader.load( 'libs/res/3D_Obj/untitled.fbx', function ( object ) {
 
     // mixer = new THREE.AnimationMixer( object );
@@ -120,7 +138,7 @@ function animate() {
 
     renderer.render( scene, camera );
 
-    stats.update();
+    //stats.update();
 
     controls.update();
 
