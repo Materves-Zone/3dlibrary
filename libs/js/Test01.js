@@ -1,9 +1,13 @@
 console.log("0.12");
 
 function myBrowser () {
-	//取得浏览器的userAgent字符串
-	var userAgent = navigator.userAgent;
-    alert(userAgent);
+    
+    if(window.navigator.userAgent.split("safari") != null){
+        alert("Safari Browser");
+    }
+    else if(window.navigator.userAgent.split("chorme") != null){
+        alert("Chorme Browser");
+    }
 }
 
 myBrowser();
